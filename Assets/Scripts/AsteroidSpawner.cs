@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using Entity;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class AsteroidSpawner : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Asteroid asteroid;
     [SerializeField] private Wave[] waves;
     [SerializeField] private float spawnDistance;
     private HashSet<Asteroid> _asteroids;
-    private int _waveIndex, _waveNumber;
+    private int _waveIndex, _waveNumber, _score;
     private Wave CurrentWave => waves[_waveIndex];
 
     private void Start()
@@ -45,9 +47,12 @@ public class AsteroidSpawner : MonoBehaviour
     {
         toDelete.OnNewAsteroid -= OnNewAsteroid;
         toDelete.OnDestroyAsteroid -= OnDestroyAsteroid;
-        
+
+        _score += (CurrentWave.sizeMinMax.y - (toDelete.Size - 1)) * 10;
+        scoreText.text = _score.ToString("0000");
+
         _asteroids.Remove(toDelete);
-        
+
         if (_asteroids.Count == 0)
         {
             NextWave();

@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Entity
 {
     public class Entity : MonoBehaviour
     {
         protected Transform Transform;
+
         protected virtual void Awake()
         {
             Transform = transform;
@@ -25,6 +27,15 @@ namespace Entity
             }
 
             Transform.position = position;
+
+            Invoke(nameof(AutoDestroy), 2);
         }
+
+        private void OnBecameVisible()
+        {
+            CancelInvoke();
+        }
+
+        private void AutoDestroy() => Destroy(gameObject);
     }
 }

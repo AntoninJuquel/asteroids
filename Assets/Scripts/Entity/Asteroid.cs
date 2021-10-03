@@ -11,7 +11,7 @@ namespace Entity
         [SerializeField] private Sprite[] asteroids;
         private SpriteRenderer _sr;
         private Rigidbody2D _rb;
-        private int _size;
+        public int Size { get; private set; }
 
         public event Action<Asteroid> OnNewAsteroid, OnDestroyAsteroid;
 
@@ -24,8 +24,13 @@ namespace Entity
             _rb = GetComponent<Rigidbody2D>();
             _rb.velocity = Random.insideUnitCircle.normalized * Random.Range(speedMinMax.x, sizeMinMax.y);
 
-            _size = Random.Range(sizeMinMax.x, sizeMinMax.y + 1);
-            Transform.localScale = (_size == 1 ? .5f : _size - 1) * Vector3.one;
+            Size = Random.Range(sizeMinMax.x, sizeMinMax.y + 1);
+            Transform.localScale = (Size == 1 ? .5f : Size - 1) * Vector3.one;
+        }
+
+        private void OnDisable()
+        {
+            OnDestroyAsteroid?.Invoke(this);
         }
 
         public void Setup(Vector2Int size, Vector2 speed)
@@ -36,18 +41,17 @@ namespace Entity
 
         public void Split()
         {
-            if (_size > sizeMinMax.x)
+            if (Size > sizeMinMax.x)
             {
                 for (var i = 0; i < 2; i++)
                 {
                     var newAsteroid = Instantiate(this, Transform.position, Transform.rotation);
-                    newAsteroid._size = _size - 1;
-                    newAsteroid.transform.localScale = (newAsteroid._size == 1 ? .5f : newAsteroid._size - 1) * Vector3.one;
+                    newAsteroid.Size = Size - 1;
+                    newAsteroid.transform.localScale = (newAsteroid.Size == 1 ? .5f : newAsteroid.Size - 1) * Vector3.one;
                     OnNewAsteroid?.Invoke(newAsteroid);
                 }
             }
 
-            OnDestroyAsteroid?.Invoke(this);
             Destroy(gameObject);
         }
     }
