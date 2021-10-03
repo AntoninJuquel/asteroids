@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Entity
 {
@@ -10,6 +12,8 @@ namespace Entity
         private SpriteRenderer _sr;
         private Rigidbody2D _rb;
         private int _size;
+
+        public event Action<Asteroid> OnNewAsteroid, OnDestroyAsteroid;
 
         protected override void Awake()
         {
@@ -24,6 +28,12 @@ namespace Entity
             Transform.localScale = (_size == 1 ? .5f : _size - 1) * Vector3.one;
         }
 
+        public void Setup(Vector2Int size, Vector2 speed)
+        {
+            sizeMinMax = size;
+            speedMinMax = speed;
+        }
+
         public void Split()
         {
             if (_size > sizeMinMax.x)
@@ -33,9 +43,11 @@ namespace Entity
                     var newAsteroid = Instantiate(this, Transform.position, Transform.rotation);
                     newAsteroid._size = _size - 1;
                     newAsteroid.transform.localScale = (newAsteroid._size == 1 ? .5f : newAsteroid._size - 1) * Vector3.one;
+                    OnNewAsteroid?.Invoke(newAsteroid);
                 }
             }
 
+            OnDestroyAsteroid?.Invoke(this);
             Destroy(gameObject);
         }
     }
