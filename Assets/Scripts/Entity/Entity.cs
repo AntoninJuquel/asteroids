@@ -12,30 +12,18 @@ namespace Entity
             Transform = transform;
         }
 
-        private void OnBecameInvisible()
+        protected virtual void Update()
         {
             var position = Transform.position;
-
-            if (position.x <= -20 || position.x >= 20)
+            if (Mathf.Abs(position.x) > 20f)
             {
-                position.x = -position.x;
+                Transform.position = new Vector3(-Mathf.Sign(position.x) * 20f, position.y);
             }
 
-            if (position.y <= -20 || position.y >= 20)
+            if (Mathf.Abs(position.y) > 20f)
             {
-                position.y = -position.y;
+                Transform.position = new Vector3(position.x, -Mathf.Sign(position.y) * 20f);
             }
-
-            Transform.position = position;
-
-            Invoke(nameof(AutoDestroy), 2);
         }
-
-        private void OnBecameVisible()
-        {
-            CancelInvoke();
-        }
-
-        private void AutoDestroy() => Destroy(gameObject);
     }
 }

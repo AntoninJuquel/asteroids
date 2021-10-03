@@ -6,6 +6,7 @@ namespace Entity
 {
     public class Asteroid : Entity
     {
+        [SerializeField] private GameObject destroyParticles;
         [SerializeField] private Vector2Int sizeMinMax;
         [SerializeField] private Vector2 speedMinMax;
         [SerializeField] private Sprite[] asteroids;
@@ -41,6 +42,7 @@ namespace Entity
 
         public void Split()
         {
+            Instantiate(destroyParticles, transform.position, Quaternion.identity);
             if (Size > sizeMinMax.x)
             {
                 for (var i = 0; i < 2; i++)

@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07bf4450d054b50a386867726640e08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyParticles: {fileID: 3033128796844455412, guid: 65159b5240006044db5d192a63c44246, type: 3}
   sizeMinMax: {x: 1, y: 3}
   speedMinMax: {x: 7, y: 14}
   asteroids:

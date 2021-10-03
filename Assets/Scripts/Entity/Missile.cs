@@ -6,13 +6,15 @@ namespace Entity
     {
         [SerializeField] private LayerMask layerToHit;
         [SerializeField] private float speed, lifeTime;
+
         private void Start()
         {
             Destroy(gameObject, lifeTime);
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             var hit = Physics2D.BoxCast(Transform.position, Transform.localScale, 0, Vector2.zero, 0, layerToHit);
             if (hit)
             {
